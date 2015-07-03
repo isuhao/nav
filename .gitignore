@@ -41,3 +41,12 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+/RecastNavigation/libs
+*.suo
+/FxRecastNavigation/Debug
+*.user
+FxNavigationTest/FxNavigationTest.vcproj.SNAIL.dongrh.user
+FxNavigationTest/FxNavigationTest.vcproj.SNAIL.dongrh.user
+Navigation.v11.suo
+Navigation.v11.suo
+test.tar
