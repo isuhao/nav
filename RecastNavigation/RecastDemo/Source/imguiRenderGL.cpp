@@ -32,6 +32,7 @@ void* imguimalloc(size_t size, void* userptr);
 #define STBTT_free(x,y)      imguifree(x,y)
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb_truetype.h"
+#include <stdio.h>
 
 void imguifree(void* ptr, void* /*userptr*/)
 {

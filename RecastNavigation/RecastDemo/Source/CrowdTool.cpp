@@ -33,6 +33,7 @@
 #include "DetourCommon.h"
 #include "DetourNode.h"
 #include "SampleInterfaces.h"
+#include <GL\glu.h>
 
 #ifdef WIN32
 #	define snprintf _snprintf

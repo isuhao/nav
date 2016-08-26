@@ -9,9 +9,6 @@
 //------------------------------------------------------------------------------
 
 #include "VisualDebugSDLImpl.h"
-#include "SDL.h"
-#include "SDL_opengl.h"
-#include "SDL_mouse.h"
 #include "imguiRenderGL.h"
 #include "imgui.h"
 #include "DetourDebugDraw.h"
@@ -20,20 +17,19 @@
 #include "duDebugDrawGL.h"
 #include "RecastDebugDraw.h"
 #include <float.h>
+#include "duDisplayItem.h"
+#include <GL/glu.h>
 
-#pragma comment(lib, "SDL.lib")
-#pragma comment(lib, "SDLmain.lib")
+#pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "opengl32.lib")
 #pragma comment(lib, "glu32.lib")
-#pragma comment(lib, "sdlmain.lib")
-#pragma comment(lib, "sdl.lib")
 
 
 const char* TITLE_STRING = "Recast Navigation Visual Debug";
 
 //duDisplayList debugDraw;
 
-DisplayList debugDraw;
+//DisplayList debugDraw;
 VisualDebugSDLImpl::VisualDebugSDLImpl(void):m_isInitialized(false)
 ,m_showPath(true)
 ,m_showGrid(false)
@@ -47,14 +43,16 @@ VisualDebugSDLImpl::VisualDebugSDLImpl(void):m_isInitialized(false)
 ,m_navMeshDrawFlags(DU_DRAWNAVMESH_OFFMESHCONS|DU_DRAWNAVMESH_OFFMESHCONS)
 ,m_bDrawTiles(false)
 ,m_bDrawGeometry(true)
-,m_bMousePosSet(false){}
+,m_bMousePosSet(false)
+, m_viewWidth(1024)
+, m_viewHeight(768){}
 
 VisualDebugSDLImpl::~VisualDebugSDLImpl(void){}
 
-bool VisualDebugSDLImpl::Initialize()
+bool VisualDebugSDLImpl::Create()
 {
 	// Init SDL
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
 	{
 		printf("Could not initialise SDL\n");
 		return false;
@@ -75,7 +73,7 @@ bool VisualDebugSDLImpl::Initialize()
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
 	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 	//#endif
-
+#if 0
 	const SDL_VideoInfo* vi = SDL_GetVideoInfo();
 
 	presentationMode = false;
@@ -86,7 +84,7 @@ bool VisualDebugSDLImpl::Initialize()
 	{
 		m_viewWidth = vi->current_w;
 		m_viewHeight = vi->current_h;
-		screen = SDL_SetVideoMode(m_viewWidth, m_viewHeight, 0, SDL_OPENGL|SDL_FULLSCREEN);
+		screen = SDL_CreateWindow(m_viewWidth, m_viewHeight, 0, SDL_OPENGL | SDL_FULLSCREEN);
 	}
 	else
 	{	
@@ -100,10 +98,18 @@ bool VisualDebugSDLImpl::Initialize()
 		printf("Could not initialise SDL opengl\n");
 		return false;
 	}
-
 	glEnable(GL_MULTISAMPLE);
 
 	SDL_WM_SetCaption(TITLE_STRING, 0);
+#else
+	m_pSDLWindow = SDL_CreateWindow("Hello World!", 100, 100, m_viewWidth, m_viewHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	if (m_pSDLWindow == NULL){
+		//std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+		SDL_Quit();
+		return false;
+	}
+	SDL_GLContext maincontext = SDL_GL_CreateContext(m_pSDLWindow);
+#endif
 
 	if (!imguiRenderGLInit("DroidSans.ttf"))
 	{
@@ -192,6 +198,8 @@ void VisualDebugSDLImpl::ProcessInput(float dt)
 					origry = ry;
 				}
 			}	
+
+#if 0
 			else if (event.button.button == SDL_BUTTON_WHEELUP)
 			{
 				if (mouseOverMenu)
@@ -206,6 +214,7 @@ void VisualDebugSDLImpl::ProcessInput(float dt)
 				else
 					scrollZoom += 1.0f;
 			}
+#endif
 			break;
 
 		case SDL_MOUSEBUTTONUP:
@@ -292,7 +301,9 @@ void VisualDebugSDLImpl::ProcessInput(float dt)
 // 	debugDraw.end();
 
 	// Handle keyboard movement.
-	Uint8* keystate = SDL_GetKeyState(NULL);
+	//Uint8* keystate = SDL_GetKeyState(NULL);
+	const Uint8* keystate = SDL_GetKeyboardState(NULL);
+
 	moveW = rcClamp(moveW + dt * 4 * (keystate[SDLK_w] ? 1 : -1), 0.0f, 1.0f);
 	moveS = rcClamp(moveS + dt * 4 * (keystate[SDLK_s] ? 1 : -1), 0.0f, 1.0f);
 	moveA = rcClamp(moveA + dt * 4 * (keystate[SDLK_a] ? 1 : -1), 0.0f, 1.0f);
@@ -318,7 +329,7 @@ void VisualDebugSDLImpl::ProcessInput(float dt)
 
 }
 
-void VisualDebugSDLImpl::Update(float fstep, dtNavMesh*navMesh, dtNavMeshQuery* navQuery, dtCrowd* navCrowd, dtTileCache* tileCache)
+void VisualDebugSDLImpl::Update(float fSeconds)
 {
 	ProcessInput(fstep);
 
@@ -334,56 +345,73 @@ void VisualDebugSDLImpl::Update(float fstep, dtNavMesh*navMesh, dtNavMeshQuery* 
 	{
 		duDebugDrawGL dd;
 
-		debugDraw.draw(&dd);
 
-		// Draw bounds
-		if (m_inputGeom)
+		int mx, my;
+		m_inputControl.GetMouseLocation(mx, my);
+		my = m_viewHeight - 1 - my;
+
+		GLdouble proj[16];
+		GLdouble model[16];
+		GLint view[4];
+
+
+		// Get hit ray position and direction.
+		glGetDoublev(GL_PROJECTION_MATRIX, proj);
+		glGetDoublev(GL_MODELVIEW_MATRIX, model);
+		glGetIntegerv(GL_VIEWPORT, view);
+		GLdouble x, y, z;
+		gluUnProject(mx, my, 0.0f, model, proj, view, &x, &y, &z);
+		m_rays[0] = (float)x; m_rays[1] = (float)y; m_rays[2] = (float)z;
+		gluUnProject(mx, my, 1.0f, model, proj, view, &x, &y, &z);
+		m_raye[0] = (float)x; m_raye[1] = (float)y; m_raye[2] = (float)z;
+
+		dd.begin(DU_DRAW_LINES, 2);
+		dd.vertex((const float*)m_raye, duRGBA(255, 255, 255, 255));
+		dd.vertex((const float*)m_rays, duRGBA(255, 255, 255, 255));
+		dd.end();
+
+		//draw mouse hit 
 		{
-			const float* bmin = m_inputGeom->getMeshBoundsMin();
-			const float* bmax = m_inputGeom->getMeshBoundsMax();
-			const float texScale = 1.0f / (m_buildParamter.m_cellSize * 10.0f);
-			if (m_bDrawGeometry)
-			{
-				duDebugDrawTriMeshSlope(&dd, m_inputGeom->getMesh()->getVerts(), m_inputGeom->getMesh()->getVertCount(),
-					m_inputGeom->getMesh()->getTris(), m_inputGeom->getMesh()->getNormals(), m_inputGeom->getMesh()->getTriCount(),
-					m_buildParamter.m_agentMaxSlope, texScale);
-			}
-			duDebugDrawBoxWire(&dd, bmin[0],bmin[1],bmin[2], bmax[0],bmax[1],bmax[2], duRGBA(255,255,255,128), 1.0f);
+			float s = 0.3;
+			unsigned int color = duRGBA(0, 0, 0, 128);
+			const float* hitPos = m_mouseHitpos;
+			dd.begin(DU_DRAW_LINES, 2.f);
+			dd.vertex(hitPos[0] - s, hitPos[1] + 0.1f, hitPos[2], color);
+			dd.vertex(hitPos[0] + s, hitPos[1] + 0.1f, hitPos[2], color);
+			dd.vertex(hitPos[0], hitPos[1] - s + 0.1f, hitPos[2], color);
+			dd.vertex(hitPos[0], hitPos[1] + s + 0.1f, hitPos[2], color);
+			dd.vertex(hitPos[0], hitPos[1] + 0.1f, hitPos[2] - s, color);
+			dd.vertex(hitPos[0], hitPos[1] + 0.1f, hitPos[2] + s, color);
+			dd.end();
 
-
-			// Tiling grid.
-			int gw = 0, gh = 0;
-			rcCalcGridSize(bmin, bmax, m_buildParamter.m_cellSize, &gw, &gh);
-			const int tw = (gw + (int)m_buildParamter.m_tileSize-1) / (int)m_buildParamter.m_tileSize;
-			const int th = (gh + (int)m_buildParamter.m_tileSize-1) / (int)m_buildParamter.m_tileSize;
-			const float s = m_buildParamter.m_tileSize*m_buildParamter.m_cellSize;
-			duDebugDrawGridXZ(&dd, bmin[0],bmin[1],bmin[2], tw,th, s, duRGBA(0,0,0,64), 1.0f);
+		}
+		// draw geometry
+		if (m_inputGeom && m_bDrawGeometry)
+		{
+			const float texScale = 1.0f / (m_buildParmter->m_cellSize * 10.0f);
+			duDebugDrawTriMeshSlope(&dd, m_inputGeom->getMesh()->getVerts(), m_inputGeom->getMesh()->getVertCount(),
+				m_inputGeom->getMesh()->getTris(), m_inputGeom->getMesh()->getNormals(), m_inputGeom->getMesh()->getTriCount(),
+				m_buildParmter->m_agentMaxSlope, texScale);
 		}
 
-		if( navMesh && navQuery)
-			duDebugDrawNavMeshWithClosedList(&dd, *navMesh, *navQuery, m_navMeshDrawFlags);
-		if( navMesh )
-			duDebugDrawNavMeshBVTree(&dd, *navMesh);
-		if( navQuery )
-			duDebugDrawNavMeshNodes(&dd, *navQuery);
-		if( navMesh )
-			duDebugDrawNavMeshPolysWithFlags(&dd, *navMesh, SAMPLE_POLYFLAGS_DISABLED, duRGBA(0,0,0,128));
+		m_recastDraw.Draw(fSeconds, &dd,
+			m_navMesh, m_navMeshQuery, m_dtCrowd, m_dtTileCache,
+			m_inputGeom ? m_inputGeom->getMeshBoundsMin() : 0,
+			m_inputGeom ? m_inputGeom->getMeshBoundsMax() : 0,
+			m_buildParmter);
 
-		if(navMesh && navCrowd)
-			RenderCrowd(fstep, navCrowd, navMesh);
+		const int nDispayItemCount = GetDisplayItemCount();
+		for (int i = 0; i < nDispayItemCount; ++i)
+		{
+			duDebugDrawItem* draw = GetDisplayItemByIndex(i);
+			draw->draw(&dd);
+		}
 
-		if (tileCache && m_bDrawTiles)
-			DrawTiles(&dd, tileCache);
-
-
-		if (tileCache )
-			drawObstacles(&dd, tileCache);
-
-		if(m_inputGeom)
+		if (m_inputGeom)
 			m_inputGeom->drawOffMeshConnections(&dd);
 
 
-		//RenderGUI(fstep);
+		//RenderOverlay();
 		EndRender();
 	}
 }
@@ -464,7 +492,7 @@ void VisualDebugSDLImpl::RenderGUI(float fSeconds)
 }
 void VisualDebugSDLImpl::EndRender()
 {
-	SDL_GL_SwapBuffers();
+	SDL_GL_SwapWindow(m_pSDLWindow);//SDL_GL_SwapBuffers();
 }
 
 
@@ -882,4 +910,9 @@ void VisualDebugSDLImpl::SetInputGeoMetry( InputTerrainGeom* geo, const BuildPar
 	m_cameraPos[0] = center[0];
 	m_cameraPos[1] = bmax[1];
 	m_cameraPos[2] = center[2];
+}
+
+void VisualDebugSDLImpl::AllocDebugDraw(duDebugDrawItem** out)
+{
+	(*out) = new duDisplayItem();
 }

@@ -17,6 +17,14 @@
 #include "InputControl.h"
 #include "rcCrowdTool.h"
 
+
+//#define USE_SDL
+
+#ifdef USE_SDL
+#include "SDL.h"
+#endif
+
+
 struct Res 
 {
 	HDC			hDC;
@@ -98,5 +106,7 @@ private:
 
 	WCHAR				m_szClassName[255];
 
-
+#ifdef USE_SDL
+	SDL_Window*			m_pSDLWindow;
+#endif
 };

@@ -1,9 +1,31 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxNavigationTest", "FxNavigationTest\FxNavigationTest.vcxproj", "{827EE0CF-08E9-4DEB-87AA-BEFD130A5175}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0F28E714-C7DE-415C-9A3E-0EFCECB15DAB} = {0F28E714-C7DE-415C-9A3E-0EFCECB15DAB}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxRecastNavigation", "FxRecastNavigation\FxRecastNavigation.vcxproj", "{0F28E714-C7DE-415C-9A3E-0EFCECB15DAB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5} = {CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FxRecastNavVisualDebug", "FxRecastNavigation\VisualDebug\FxRecastNavVisualDebug.vcxproj", "{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Detour", "RecastNavigation\RecastDemo\Build\vs2013\Detour.vcxproj", "{E373673D-74C6-C845-84A5-C55E616D2F45}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DebugUtils", "RecastNavigation\RecastDemo\Build\vs2013\DebugUtils.vcxproj", "{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DetourCrowd", "RecastNavigation\RecastDemo\Build\vs2013\DetourCrowd.vcxproj", "{96B8645D-DF1D-F144-B2B2-7622A1F6233B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DetourTileCache", "RecastNavigation\RecastDemo\Build\vs2013\DetourTileCache.vcxproj", "{424902C1-188D-8C4F-B5BD-53063BEFF30F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Recast", "RecastNavigation\RecastDemo\Build\vs2013\Recast.vcxproj", "{6F4D3192-7130-3B4E-B04E-700C672CE835}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Base", "Base", "{B0C3A03B-6FDB-4CFB-876B-F4973C1A790F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,8 +49,53 @@ Global
 		{0F28E714-C7DE-415C-9A3E-0EFCECB15DAB}.Release|Win32.ActiveCfg = Release|Win32
 		{0F28E714-C7DE-415C-9A3E-0EFCECB15DAB}.Release|Win32.Build.0 = Release|Win32
 		{0F28E714-C7DE-415C-9A3E-0EFCECB15DAB}.Release|x64.ActiveCfg = Release|Win32
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Debug|Win32.Build.0 = Debug|Win32
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Debug|x64.ActiveCfg = Debug|x64
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Debug|x64.Build.0 = Debug|x64
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Release|Win32.ActiveCfg = Release|Win32
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Release|Win32.Build.0 = Release|Win32
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Release|x64.ActiveCfg = Release|x64
+		{CDEE0FEE-B757-4A05-BC01-9E0F3E4C3DC5}.Release|x64.Build.0 = Release|x64
+		{E373673D-74C6-C845-84A5-C55E616D2F45}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E373673D-74C6-C845-84A5-C55E616D2F45}.Debug|Win32.Build.0 = Debug|Win32
+		{E373673D-74C6-C845-84A5-C55E616D2F45}.Debug|x64.ActiveCfg = Debug|Win32
+		{E373673D-74C6-C845-84A5-C55E616D2F45}.Release|Win32.ActiveCfg = Release|Win32
+		{E373673D-74C6-C845-84A5-C55E616D2F45}.Release|Win32.Build.0 = Release|Win32
+		{E373673D-74C6-C845-84A5-C55E616D2F45}.Release|x64.ActiveCfg = Release|Win32
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}.Debug|Win32.Build.0 = Debug|Win32
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}.Debug|x64.ActiveCfg = Debug|Win32
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}.Release|Win32.ActiveCfg = Release|Win32
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}.Release|Win32.Build.0 = Release|Win32
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1}.Release|x64.ActiveCfg = Release|Win32
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B}.Debug|Win32.Build.0 = Debug|Win32
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B}.Debug|x64.ActiveCfg = Debug|Win32
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B}.Release|Win32.ActiveCfg = Release|Win32
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B}.Release|Win32.Build.0 = Release|Win32
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B}.Release|x64.ActiveCfg = Release|Win32
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F}.Debug|Win32.Build.0 = Debug|Win32
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F}.Debug|x64.ActiveCfg = Debug|Win32
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F}.Release|Win32.ActiveCfg = Release|Win32
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F}.Release|Win32.Build.0 = Release|Win32
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F}.Release|x64.ActiveCfg = Release|Win32
+		{6F4D3192-7130-3B4E-B04E-700C672CE835}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6F4D3192-7130-3B4E-B04E-700C672CE835}.Debug|Win32.Build.0 = Debug|Win32
+		{6F4D3192-7130-3B4E-B04E-700C672CE835}.Debug|x64.ActiveCfg = Debug|Win32
+		{6F4D3192-7130-3B4E-B04E-700C672CE835}.Release|Win32.ActiveCfg = Release|Win32
+		{6F4D3192-7130-3B4E-B04E-700C672CE835}.Release|Win32.Build.0 = Release|Win32
+		{6F4D3192-7130-3B4E-B04E-700C672CE835}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E373673D-74C6-C845-84A5-C55E616D2F45} = {B0C3A03B-6FDB-4CFB-876B-F4973C1A790F}
+		{EF90D630-F0CD-C54A-8CDB-80B17F0617B1} = {B0C3A03B-6FDB-4CFB-876B-F4973C1A790F}
+		{96B8645D-DF1D-F144-B2B2-7622A1F6233B} = {B0C3A03B-6FDB-4CFB-876B-F4973C1A790F}
+		{424902C1-188D-8C4F-B5BD-53063BEFF30F} = {B0C3A03B-6FDB-4CFB-876B-F4973C1A790F}
+		{6F4D3192-7130-3B4E-B04E-700C672CE835} = {B0C3A03B-6FDB-4CFB-876B-F4973C1A790F}
 	EndGlobalSection
 EndGlobal

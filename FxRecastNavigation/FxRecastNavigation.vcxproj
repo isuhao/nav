@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -17,15 +17,15 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v110</PlatformToolset>
+    <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -53,10 +53,13 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)RecastNavigation/libs/$(Configuration);$(SolutionDir)RecastNavigation\RecastDemo\Contrib\SDL2\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Detour.lib;DetourCrowd.lib;DetourTileCache.lib;Recast.lib;DebugUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -74,32 +77,41 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(SolutionDir)$(Configuration);$(SolutionDir)RecastNavigation/libs/$(Configuration);$(SolutionDir)RecastNavigation\RecastDemo\Contrib\SDL2\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Detour.lib;DetourCrowd.lib;DetourTileCache.lib;Recast.lib;DebugUtils.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ChunkyTriMesh.h" />
+    <ClInclude Include="CoordSystem.h" />
+    <ClInclude Include="DebugDrawPool.h" />
     <ClInclude Include="fastlz\fastlz.h" />
-    <ClInclude Include="VisualDebug\duDebugDrawGL.h" />
-    <ClInclude Include="VisualDebug\duDebugDrawPool.h" />
-    <ClInclude Include="VisualDebug\duDisplayItem.h" />
-    <ClInclude Include="VisualDebug\GL\GL.H" />
-    <ClInclude Include="VisualDebug\GL\GLAUX.H" />
-    <ClInclude Include="VisualDebug\GL\glext.h" />
-    <ClInclude Include="VisualDebug\GL\GLU.H" />
-    <ClInclude Include="VisualDebug\GL\glut.h" />
-    <ClInclude Include="VisualDebug\InputControl.h" />
-    <ClInclude Include="VisualDebug\rcCrowdTool.h" />
-    <ClInclude Include="VisualDebug\rcDebugDraw.h" />
-    <ClInclude Include="VisualDebug\VisualDebugOenGLImpl.h" />
+    <ClInclude Include="InputTerrainGeom.h" />
+    <ClInclude Include="MeshLoaderTerrain.h" />
+    <ClInclude Include="PerfTimer.h" />
+    <ClInclude Include="rcBlockAlloc.h" />
+    <ClInclude Include="rcBotAgent.h" />
+    <ClInclude Include="rcDefaultFileIO.h" />
+    <ClInclude Include="rcObstacle.h" />
+    <ClInclude Include="rcWorldObject.h" />
+    <ClInclude Include="RecastNavigationManager.h" />
+    <ClInclude Include="RecastNavMeshBuilder.h" />
+    <ClInclude Include="string_pod.h" />
+    <ClInclude Include="VisualDebug.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChunkyTriMesh.cpp" />
+    <ClCompile Include="CoordSystem.cpp" />
+    <ClCompile Include="DebugDrawPool.cpp" />
     <ClCompile Include="fastlz\fastlz.c" />
-    <ClCompile Include="VisualDebug\duDebugDrawGL.cpp" />
-    <ClCompile Include="VisualDebug\duDebugDrawPool.cpp" />
-    <ClCompile Include="VisualDebug\duDisplayItem.cpp" />
-    <ClCompile Include="VisualDebug\InputControl.cpp" />
-    <ClCompile Include="VisualDebug\rcCrowdTool.cpp" />
-    <ClCompile Include="VisualDebug\rcDebugDraw.cpp" />
-    <ClCompile Include="VisualDebug\VisualDebugOenGLImpl.cpp" />
+    <ClCompile Include="InputTerrainGeom.cpp" />
+    <ClCompile Include="MeshLoaderTerrain.cpp" />
+    <ClCompile Include="PerfTimer.cpp" />
+    <ClCompile Include="rcBotAgent.cpp" />
+    <ClCompile Include="rcDefaultFileIO.cpp" />
+    <ClCompile Include="rcObstacle.cpp" />
+    <ClCompile Include="RecastNavigationManager.cpp" />
+    <ClCompile Include="RecastNavMeshBuilder.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,6 +22,12 @@
 #include <math.h>
 #include <set>
 #include <sstream>
+
+#ifdef USE_SDL
+#pragma comment(lib, "SDL2.lib")
+#endif
+
+
 #pragma comment (lib, "opengl32.lib")  /* link with Microsoft OpenGL lib */
 #pragma comment (lib, "glu32.lib")     /* link with OpenGL Utility lib */
 std::set<VisualDebugOenGLImpl*> msgProcessor;
@@ -66,14 +72,50 @@ VisualDebugOenGLImpl::~VisualDebugOenGLImpl(void){}
 
 bool VisualDebugOenGLImpl::Create()
 {	
+
+#ifndef USE_SDL
 	CreateGLWindow("", m_viewWidth, m_viewHeight, 16, false, m_context);
+
+	if (!m_inputControl.Initialize(m_context.hInstance, m_context.hWnd, m_viewWidth, m_viewHeight))
+		return false;
+#else
+	// Init SDL
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		printf("Could not initialise SDL\n");
+		return false;
+	}
+
+	// Center window
+	char env[] = "SDL_VIDEO_CENTERED=1";
+	putenv(env);
+
+	// Init OpenGL
+	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
+	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 8);
+	SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 8);
+	//#ifndef WIN32
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+	SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
+
+
+	m_pSDLWindow = SDL_CreateWindow("Hello World!", 100, 100, m_viewWidth, m_viewHeight, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+	if (m_pSDLWindow == NULL){
+		//std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
+		SDL_Quit();
+		return false;
+	}
+	SDL_GLContext maincontext = SDL_GL_CreateContext(m_pSDLWindow);
+#endif
 
 	msgProcessor.insert(this);
 
 	m_isInitialized = true;
 
 
-	m_inputControl.Initialize(m_context.hInstance, m_context.hWnd,m_viewWidth, m_viewHeight);
 
 	if ( !imguiRenderGLInit("DroidSans.ttf") )
 		return false;
@@ -132,7 +174,7 @@ void VisualDebugOenGLImpl::Update(float fSeconds)
 	if (!m_bShow)
 		return;
 
-
+#ifndef USE_SDL
 	MSG	msg;
 	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
@@ -144,6 +186,7 @@ void VisualDebugOenGLImpl::Update(float fSeconds)
 		m_inputControl.Frame();
 
 	ProcessInput(fSeconds);
+#endif // !USE_SDL
 
 
 	BeginRending();
@@ -173,8 +216,8 @@ void VisualDebugOenGLImpl::Update(float fSeconds)
 	dd.vertex((const float*)m_raye,duRGBA(255,255,255,255));
 	dd.vertex((const float*)m_rays,duRGBA(255,255,255,255));
 	dd.end();
-
 	//draw mouse hit 
+	if (true)
 	{
 		float s = 0.3;
 		unsigned int color = duRGBA(0,0,0,128);
@@ -189,6 +232,8 @@ void VisualDebugOenGLImpl::Update(float fSeconds)
 		dd.end();
 
 	}
+
+
 	// draw geometry
 	if (m_inputGeom && m_bDrawGeometry)
 	{
@@ -197,6 +242,7 @@ void VisualDebugOenGLImpl::Update(float fSeconds)
 			m_inputGeom->getMesh()->getTris(), m_inputGeom->getMesh()->getNormals(), m_inputGeom->getMesh()->getTriCount(),
 			m_buildParmter->m_agentMaxSlope, texScale);
 	}
+#if 1
 
 	m_recastDraw.Draw(fSeconds, &dd, 
 		m_navMesh, m_navMeshQuery, m_dtCrowd, m_dtTileCache, 
@@ -214,7 +260,7 @@ void VisualDebugOenGLImpl::Update(float fSeconds)
 	if(m_inputGeom)
 		m_inputGeom->drawOffMeshConnections(&dd);
 
-
+#endif
 	RenderOverlay();
 
 	Present();
@@ -321,7 +367,12 @@ void VisualDebugOenGLImpl::RenderOverlay()
 
 void VisualDebugOenGLImpl::Present()
 {
+#ifndef USE_SDL
 	SwapBuffers(m_context.hDC);
+#else
+	SDL_GL_SwapWindow(m_pSDLWindow);
+#endif // !USE_SDL
+
 
 }
 
@@ -689,4 +740,10 @@ void VisualDebugOenGLImpl::OnRemoveShowContent( const char* name )
 void VisualDebugOenGLImpl::AllocDebugDraw( duDebugDrawItem** out)
 {
 	(*out) = new duDisplayItem();
+}
+
+VisualDebug* GetVisualDebug()
+{
+	static VisualDebugOenGLImpl ogl;
+	return &ogl;
 }

@@ -15,69 +15,90 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="VisualDebug\GL\GL.H">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\GL\GLAUX.H">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\GL\glext.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\GL\GLU.H">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\GL\glut.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\duDebugDrawGL.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\duDebugDrawPool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\duDisplayItem.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\InputControl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\rcCrowdTool.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\rcDebugDraw.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="VisualDebug\VisualDebugOenGLImpl.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="fastlz\fastlz.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ChunkyTriMesh.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CoordSystem.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugDrawPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="InputTerrainGeom.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshLoaderTerrain.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="PerfTimer.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rcBlockAlloc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rcBotAgent.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rcDefaultFileIO.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rcObstacle.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="rcWorldObject.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RecastNavigationManager.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RecastNavMeshBuilder.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="string_pod.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="VisualDebug.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="VisualDebug\duDebugDrawGL.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualDebug\duDebugDrawPool.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualDebug\duDisplayItem.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualDebug\InputControl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualDebug\rcCrowdTool.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualDebug\rcDebugDraw.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="VisualDebug\VisualDebugOenGLImpl.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="fastlz\fastlz.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ChunkyTriMesh.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CoordSystem.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugDrawPool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="InputTerrainGeom.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshLoaderTerrain.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="PerfTimer.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rcBotAgent.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rcDefaultFileIO.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="rcObstacle.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RecastNavigationManager.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RecastNavMeshBuilder.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

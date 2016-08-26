@@ -32,6 +32,7 @@
 #include "DetourNavMeshBuilder.h"
 #include "DetourDebugDraw.h"
 #include "DetourCommon.h"
+#include <GL\glu.h>
 
 #ifdef WIN32
 #	define snprintf _snprintf

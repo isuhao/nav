@@ -30,6 +30,7 @@
 #include "Recast.h"
 #include "RecastDebugDraw.h"
 #include "DetourDebugDraw.h"
+#include <GL\glu.h>
 
 #ifdef WIN32
 #	define snprintf _snprintf

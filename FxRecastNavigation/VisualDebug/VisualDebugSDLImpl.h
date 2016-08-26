@@ -8,6 +8,9 @@
 // 版权所有:	苏州蜗牛电子有限公司
 //------------------------------------------------------------------------------
 
+#include "SDL.h"
+#include "SDL_opengl.h"
+#include "SDL_mouse.h"
 #include "DetourNavMesh.h"
 #include "DetourCrowd.h"
 #include "DetourNavMeshQuery.h"
@@ -26,11 +29,12 @@ public:
 	VisualDebugSDLImpl(void);
 	~VisualDebugSDLImpl(void);
 
-	virtual bool	Initialize();
+	virtual bool	Create();
 	virtual bool	IsInitialized()const { return m_isInitialized; }
-	virtual void	Update(float fSeconds, dtNavMesh*, dtNavMeshQuery*, dtCrowd*, dtTileCache*);
+	virtual void	Update(float fSeconds);
 	virtual void	SetInputGeoMetry(InputTerrainGeom* geo, const BuildParamter& param);
 	virtual void	ReloadInputGeom(const char* pathfile);
+	virtual void	AllocDebugDraw(duDebugDrawItem** out);
 
 private:
 	bool			BeginRender();
@@ -65,6 +69,7 @@ private:
 	rcContext		m_rcContext;
 
 	BuildParamter	m_buildParamter;
+	SDL_Window*		m_pSDLWindow;
 
 
 	InputTerrainGeom*		m_inputGeom;
@@ -74,6 +79,9 @@ private:
 	float ry;
 	bool m_bMousePosSet;
 
+	rcDebugDraw	m_recastDraw;
 
 
 };
+
+

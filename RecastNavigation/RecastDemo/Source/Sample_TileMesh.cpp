@@ -36,6 +36,7 @@
 #include "OffMeshConnectionTool.h"
 #include "ConvexVolumeTool.h"
 #include "CrowdTool.h"
+#include <GL\glu.h>
 
 
 #ifdef WIN32

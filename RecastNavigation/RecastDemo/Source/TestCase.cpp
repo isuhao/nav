@@ -28,6 +28,7 @@
 #include "SDL_opengl.h"
 #include "imgui.h"
 #include "PerfTimer.h"
+#include <GL\glu.h>
 
 #ifdef WIN32
 #define snprintf _snprintf

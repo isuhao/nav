@@ -115,4 +115,7 @@ protected:
 	int					m_nDisplayCount;
 	std::vector<duDebugDrawItem*> m_displayAry;
 };
+
+
+VisualDebug* GetVisualDebug();
 #endif

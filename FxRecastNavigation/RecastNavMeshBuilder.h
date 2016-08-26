@@ -44,12 +44,14 @@ enum SamplePolyFlags
 enum {MAX_LAYERS = 32};
 
 
+
 struct GeoMetryHeader
 {
-	int Start;
-	int nVertexCount;
+	int		Start;
+	int		nVertexCount;
+	char	Version[2];
+	float	fRasterizeSize;
 };
-
 
 
 struct TileCacheData

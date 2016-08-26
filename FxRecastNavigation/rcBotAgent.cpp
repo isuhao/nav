@@ -63,10 +63,14 @@ void rcBotAgent::Update( float fSeconds )
 	//stop if arrvied
 	if ( IsMovingOnLivePath() && HasArrvie() ) 
 	{
+		float targetPos[3];
+		float currntPos[3];
+		rcVcopy(currntPos, agentPtr->npos);
+		rcVcopy(targetPos, agentPtr->targetPos);
+		Stop();
 		const dtCrowdAgent* agentPtr = m_navCrowd->getAgent(m_hAgent);
 		if(m_initConf.pObserver)
-			m_initConf.pObserver->OnBotArrive(this, agentPtr->npos, agentPtr->targetPos);
-		Stop();
+			m_initConf.pObserver->OnBotArrive(this, currntPos, targetPos);
 	}
 }
 

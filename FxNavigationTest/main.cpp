@@ -3,6 +3,7 @@
 #include "stdafx.h"
 #include "main.h"
 #include "INavigationManager.h"
+#include "CommandManager.h"
 #include <sstream>
 #include <iostream>
 #include <fstream>
@@ -114,15 +115,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_FXNAVIGATIONTEST));
 
-
+#if 0
 	static NavigationObserver Observer;
 	NaviMgrInitConfig conf;
-	//conf.m_bVisualDebug = true;
+	conf.m_bVisualDebug = true;
 	conf.m_pObserver = &Observer;
 	GetNavigationManager()->Initialize(conf);
-	//conf.m_bVisualDebug = false;
-	conf.m_pObserver = 0;
-	GetNavigationManager(1)->Initialize(conf);
+	conf.m_bVisualDebug = true;
 
 	char szScenePath[255], szSceneName[255], szPathFileName[MAX_PATH];
 	GetPrivateProfileStringA("recast", "scenepath", "", szScenePath, 255, "./FxNavigatoinTest.ini");
@@ -137,7 +136,20 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		GetNavigationManager()->CreateWorld(szSceneName, worldConf);
 		//GetNavigationManager(1)->CreateWorld(szSceneName, worldConf);
 	}
+#else
 
+	std::ifstream fileOpen;
+	fileOpen.open("task.conf");
+	if (!fileOpen.fail())
+	{
+		char szCommandBuff[2018];
+		while (!fileOpen.eof())
+		{
+			fileOpen.getline(szCommandBuff, sizeof(szCommandBuff));
+			GetCommManager().ExecuteTask(szCommandBuff);
+		}
+	}
+#endif
 
 	//CreateThread(NULL, 0, ThreadFun, NULL, 0, NULL);
 
@@ -165,6 +177,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		if(g_bPause)
 			fSecond = 0;
 
+		GetCommManager().Step(fSecond);
 		GetNavigationManager()->Update(fSecond);
 		static NaviGeoRender render(NaviGeoRender::GEOTYPE_ALL);
 
@@ -345,7 +358,7 @@ INT_PTR CALLBACK OnButtonClick( int controlID, HWND hDlg, WPARAM wParam )
 		{
 			char szScenePath[255], szSceneName[255];
 			GetDlgItemTextA(hDlg, IDC_EDIT_SCENENAME, szSceneName, 255);
-			GetNavigationManager()->ShowVisualDebug(szSceneName);
+			GetNavigationManager()->ShowVisualDebug(true);
 		}
 		break;
 	case IDC_BTN_DESTROYWORLD:

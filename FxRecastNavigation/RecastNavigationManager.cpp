@@ -14,8 +14,6 @@
 //#include <vld.h>
 
 #ifdef RC_VSDBG_ENBALE
-#include "VisualDebug/VisualDebugSDLImpl.h"
-#include "VisualDebug/VisualDebugOenGLImpl.h"
 #pragma comment(lib, "FxRecastNavVisualDebug.lib")
 #endif
 
@@ -146,9 +144,6 @@ RecastNavigationManager::~RecastNavigationManager(void)
 	if(m_tcomp ) delete m_tcomp;
 	if(m_ctx ) delete m_ctx;
 	if(m_pBotAgentObserver) delete m_pBotAgentObserver;
-#ifdef RC_VSDBG_ENBALE
-	if(m_visualDebug) delete m_visualDebug;
-#endif
 
 	m_talloc = NULL;
 	m_tcomp = NULL;
@@ -166,7 +161,7 @@ bool RecastNavigationManager::Initialize(const NaviMgrInitConfig& conf)
 	m_pBotAgentObserver = new BotAgentObserv(this);
 
 #ifdef RC_VSDBG_ENBALE
-	m_visualDebug	= new VisualDebugOenGLImpl;//VisualDebugSDLImpl;
+	m_visualDebug = GetVisualDebug();
 	if( m_bVisualDebug )
 	{
 		m_visualDebug->Create();
@@ -213,8 +208,39 @@ bool RecastNavigationManager::CreateWorld(const char* name, const NaviWorldInitC
 		m_pFileIO->seek(header.Start, 0);
 		float* vertsBuff = new float[header.nVertexCount*3];
 		m_pFileIO->read((char*)vertsBuff, header.nVertexCount*3*sizeof(float));
+		if ( header.Start!=sizeof(GeoMetryHeader))
+			break;
+		if ( header.Version[0]!='0' || header.Version[1]!='1')
+			break;
+
+		
+		std::vector<float> expentToMesh;
+		float* oneVert = NULL;
+		for (int i=0;i<header.nVertexCount*3; i+=3)
+		{
+			oneVert = vertsBuff + i;
+			expentToMesh.push_back(oneVert[0]);
+			expentToMesh.push_back(oneVert[1]);
+			expentToMesh.push_back(oneVert[2]);
+			expentToMesh.push_back(oneVert[0]);
+			expentToMesh.push_back(oneVert[1]);
+			expentToMesh.push_back(oneVert[2] + header.fRasterizeSize);
+			expentToMesh.push_back(oneVert[0] + header.fRasterizeSize);
+			expentToMesh.push_back(oneVert[1]);
+			expentToMesh.push_back(oneVert[2]);
+			expentToMesh.push_back(oneVert[0] + header.fRasterizeSize);
+			expentToMesh.push_back(oneVert[1]);
+			expentToMesh.push_back(oneVert[2]);
+			expentToMesh.push_back(oneVert[0]);
+			expentToMesh.push_back(oneVert[1]);
+			expentToMesh.push_back(oneVert[2] + header.fRasterizeSize);
+			expentToMesh.push_back(oneVert[0] + header.fRasterizeSize);
+			expentToMesh.push_back(oneVert[1]);
+			expentToMesh.push_back(oneVert[2] + header.fRasterizeSize);
+		}
+
 		newWorld.m_geom = new InputTerrainGeom;
-		newWorld.m_geom->loadMesh(m_ctx,vertsBuff, header.nVertexCount*3);
+		newWorld.m_geom->loadMesh(m_ctx,&expentToMesh[0], expentToMesh.size());
 		delete vertsBuff;
 		m_pFileIO->close();
 
